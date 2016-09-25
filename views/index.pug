@@ -1,0 +1,68 @@
+html
+        head
+                title CCUSH
+                style
+                        include style.css
+                script
+
+        body
+                h1 CCUSH
+                table
+                        tr
+                                td
+                                        | Inputs:
+                        tr
+                                td
+                                        each val in inputs
+                                                if (val["Active"] == 0)
+                                                        div(class="disabled_value")
+                                                                = val["Voltage"]
+                                                else
+                                                        div(class="enabled_value")
+                                                                = val["Voltage"]
+                        tr
+                                td
+                                        | Outputs:
+                        tr
+                                td
+                                        each val, index in outputs
+                                                if val == 1
+                                                        div(class="disabled_value")
+                                                                | Активен
+                                                                br
+                                                                form(method="post", action="/disable-output/")
+                                                                        button(type="id", name="id", value=index)
+                                                                                | Выключить
+                                                else
+                                                        div(class="disabled_value")
+                                                                | Пассивен
+                                                                br
+                                                                form(method="post", action="/enable-output/")
+                                                                        button(type="id", name="id", value=index)
+                                                                                | Включить
+                table
+                        tr
+                                td
+                                        | Power
+                                td
+                                        = power
+                        tr
+                                td
+                                        | Temp
+                                td
+                                        = temp
+                        tr
+                                td
+                                        | Battery state
+                                td
+                                        = batteryState
+                        tr
+                                td
+                                        | Partitions
+                                td
+                                        = partitions
+                        tr
+                                td
+                                        | Balance
+                                td
+                                        = balance

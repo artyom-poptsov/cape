@@ -1,0 +1,58 @@
+html
+        head
+                title CCUSH: Информация об устройстве
+                style
+                        include style.css
+        body
+                h1 CCUSH: Информация об устройстве
+                table
+                        tr
+                                td
+                                        | Тип контроллера
+                                td
+                                        = deviceType
+                        tr
+                                td
+                                        | Модификация
+                                td
+                                        = deviceMod
+                        tr
+                                td
+                                        | Аппаратная версия
+                                td
+                                        = hwVer
+                        tr
+                                td
+                                        | Версия прошивки
+                                td
+                                        = fwVer
+                        tr
+                                td
+                                        | Версия загрузчика
+                                td
+                                        = bootVer
+                        tr
+                                td
+                                        | Дата сборки прошивки
+                                td
+                                        = fwBuildDate
+                        tr
+                                td
+                                        | Код страны
+                                td
+                                        = countryCode
+                        tr
+                                td
+                                        | Серийный номер
+                                td
+                                        = serial
+                        tr
+                                td
+                                        | IMEI
+                                td
+                                        = IMEI
+                        tr
+                                td
+                                        | Код минимальной версии uGuard
+                                td
+                                        = uGuardVerCode
