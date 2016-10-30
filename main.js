@@ -3,6 +3,7 @@ const express = require('express');
 const yaml    = require('js-yaml');
 const request = require('request');
 const bodyParser = require('body-parser');
+const basicAuth = require('basic-auth-connect');
 
 const app = express();
 
@@ -76,55 +77,88 @@ function renderInfo(res, data) {
 
 
 function handleGetRoot(req, res) {
-    var body = '';
-    // request.get(_config_.ccush.server + 'data.cgx?cmd=\{"Command":"GetStateAndEvents"\}')
-    request.get("http://localhost:8081/")
-        .auth(_config_.ccush.user, _config_.ccush.password)
-        .on('response', function(response) {
-            console.log("Response status code: " + response.statusCode);
-        })
-        .on('data', function(chunk) {
-            body += chunk;
-        })
-        .on('end', function(error) {
-            renderIndex(res, body);
+    try {
+        var body = '';
+
+        // DEBUG:
+        // var dataReq = request.get('http://localhost:8081/')
+
+        var dataReq = request.get(_config_.ccush.server
+                                  + 'data.cgx?cmd={"Command":"GetStateAndEvents"}')
+            .auth(_config_.ccush.user, _config_.ccush.password);
+
+        dataReq.on('error', function(e) {
+            res.render('error');
         });
+
+        dataReq.on('response', function(response) {
+            console.log("Response status code: " + response.statusCode);
+            if (response.statusCode == 200) {
+                dataReq.on('data', function(chunk) {
+                    body += chunk;
+                });
+                dataReq.on('end', function(error) {
+                    if (! error)
+                        renderIndex(res, body);
+                    else
+                        res.render('error');
+                });
+            } else {
+                res.render('error');
+            }
+        });
+    } catch (e) {
+        console.log(e);
+    }
 }
 
 function handleGetInfo(req, res) {
     var body = '';
-    // request.get(_config_.ccush.server + 'data.cgx?cmd=\{"Command":"GetDeviceInfo"\}')
-    request.get("http://localhost:8081/info")
-        .auth(_config_.ccush.user, _config_.ccush.password)
-        .on('response', function(response) {
-            console.log("Response status code: " + response.statusCode);
-        })
-        .on('data', function(chunk) {
-            body += chunk;
-        })
-        .on('end', function(error) {
-            renderInfo(res, body);
-        });
+    var dataReq = request.get(_config_.ccush.server
+                              + 'data.cgx?cmd={"Command":"GetDeviceInfo"}')
+        .auth(_config_.ccush.user, _config_.ccush.password);
+
+    dataReq.on('error', function(e) {
+        res.render('error');
+    });
+    dataReq.on('response', function(response) {
+        console.log("Response status code: " + response.statusCode);
+        if (response.statusCode == 200) {
+            dataReq.on('data', function(chunk) {
+                body += chunk;
+            });
+            dataReq.on('end', function(error) {
+                renderInfo(res, body);
+            });
+        } else {
+            res.render('error');
+        }
+    });
 }
 
 function handlePostEnableOutput(req, res) {
-    // console.log(req);
-    request.get(_config_.ccush.server + 'data.cgx?cmd=' +
-                {
-                    'Command': "SetOutputState",
-                    'Number' : req.body.id,
-                    'State'  : 1
-                });
+    console.log('handlePostEnableOutput: id: ' + req.body.id);
+    request.get(_config_.ccush.server
+                + 'data.cgx?cmd={"Command":"SetOutputState","Number":"'
+                + req.body.id,
+                + '","State":"1"}')
+        .auth(_config_.ccush.user, _config_.ccush.password)
+        .on('response', function(response) {
+            console.log("Response status code: " + response.statusCode);
+        });
     res.redirect('/');
 }
 
 function handlePostDisableOutput(req, res) {
-    request.get(_config_.ccush.server + 'data.cgx?cmd=' +
-                {
-                    'Command': "SetOutputState",
-                    'Number' : req.body.id,
-                    'State'  : 0
-                });
+    console.log('handlePostDisableOutput: id: ' + req.body.id);
+    request.get(_config_.ccush.server
+                + 'data.cgx?cmd={"Command":"SetOutputState","Number":"'
+                + req.body.id,
+                + '","State":"0"}')
+        .auth(_config_.ccush.user, _config_.ccush.password)
+        .on('response', function(response) {
+            console.log("Response status code: " + response.statusCode);
+        });
     res.redirect('/');
 }
 
@@ -133,12 +167,15 @@ function handlePostDisableOutput(req, res) {
 
 function setupApplication() {
     app.set('port', process.env.PORT || 8080);
-    // app.set('views', path.join('/directory/', 'views'));
     app.set('view engine', 'pug');
     app.set(bodyParser.json());
     app.use(bodyParser.urlencoded({
         extended: true
     }));
+    app.use(express.static('public'));
+
+    // Authenticator
+    app.use(basicAuth('user', _config_.ccush_ui.password));
 }
 
 function setupRoutes() {
