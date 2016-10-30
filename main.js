@@ -83,9 +83,9 @@ function handleGetRoot(req, res) {
         // DEBUG:
         // var dataReq = request.get('http://localhost:8081/')
 
-        var dataReq = request.get(_config_.ccush.server
+        var dataReq = request.get(_config_.cape.server
                                   + 'data.cgx?cmd={"Command":"GetStateAndEvents"}')
-            .auth(_config_.ccush.user, _config_.ccush.password);
+            .auth(_config_.cape.user, _config_.cape.password);
 
         dataReq.on('error', function(e) {
             res.render('error');
@@ -114,9 +114,9 @@ function handleGetRoot(req, res) {
 
 function handleGetInfo(req, res) {
     var body = '';
-    var dataReq = request.get(_config_.ccush.server
+    var dataReq = request.get(_config_.cape.server
                               + 'data.cgx?cmd={"Command":"GetDeviceInfo"}')
-        .auth(_config_.ccush.user, _config_.ccush.password);
+        .auth(_config_.cape.user, _config_.cape.password);
 
     dataReq.on('error', function(e) {
         res.render('error');
@@ -138,11 +138,11 @@ function handleGetInfo(req, res) {
 
 function handlePostEnableOutput(req, res) {
     console.log('handlePostEnableOutput: id: ' + req.body.id);
-    request.get(_config_.ccush.server
+    request.get(_config_.cape.server
                 + 'data.cgx?cmd={"Command":"SetOutputState","Number":"'
                 + req.body.id,
                 + '","State":"1"}')
-        .auth(_config_.ccush.user, _config_.ccush.password)
+        .auth(_config_.cape.user, _config_.cape.password)
         .on('response', function(response) {
             console.log("Response status code: " + response.statusCode);
         });
@@ -151,11 +151,11 @@ function handlePostEnableOutput(req, res) {
 
 function handlePostDisableOutput(req, res) {
     console.log('handlePostDisableOutput: id: ' + req.body.id);
-    request.get(_config_.ccush.server
+    request.get(_config_.cape.server
                 + 'data.cgx?cmd={"Command":"SetOutputState","Number":"'
                 + req.body.id,
                 + '","State":"0"}')
-        .auth(_config_.ccush.user, _config_.ccush.password)
+        .auth(_config_.cape.user, _config_.cape.password)
         .on('response', function(response) {
             console.log("Response status code: " + response.statusCode);
         });
@@ -175,7 +175,7 @@ function setupApplication() {
     app.use(express.static('public'));
 
     // Authenticator
-    app.use(basicAuth('user', _config_.ccush_ui.password));
+    app.use(basicAuth('user', _config_.cape_ui.password));
 }
 
 function setupRoutes() {
