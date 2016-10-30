@@ -1,8 +1,8 @@
-# cape
+![cape](./doc/cape.png)
 
 cape (IPA: /keɪp/) is an interface to RADS controllers.
 
-## Configuration
+# Configuration
 
 Please specify the configuration in `config.yaml` file in the
 project's directory.  For example:
@@ -17,7 +17,7 @@ cape_ui:
   password: <your-password-to-ui>
 ```
 
-## Usage
+# Usage
 
 In the project's directory:
 
