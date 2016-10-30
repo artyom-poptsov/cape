@@ -3,11 +3,12 @@ html
                 title CCUSH
                 style
                         include style.css
-                script
-
         body
                 h1 CCUSH
-                table
+                a(href="/info")
+                        | Информация об устройстве
+                br
+                table(class="info_table")
                         tr
                                 td
                                         | Inputs:
@@ -20,6 +21,7 @@ html
                                                 else
                                                         div(class="enabled_value")
                                                                 = val["Voltage"]
+                table(class="info_table")
                         tr
                                 td
                                         | Outputs:
@@ -35,12 +37,14 @@ html
                                                                                 | Выключить
                                                 else
                                                         div(class="disabled_value")
+                                                                = index
+                                                                hr
                                                                 | Пассивен
                                                                 br
                                                                 form(method="post", action="/enable-output/")
                                                                         button(type="id", name="id", value=index)
                                                                                 | Включить
-                table
+                table(class="info_table", style="width: 25%")
                         tr
                                 td
                                         | Power
@@ -66,3 +70,5 @@ html
                                         | Balance
                                 td
                                         = balance
+        h2 Камера видеонаблюдения
+        img(src="cape_chelyuskin.jpg")

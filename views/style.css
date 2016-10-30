@@ -20,4 +20,14 @@
     font-weight:      bold;
     display:          inline-block;
     line-height:      50px;
+    padding:          5px;
+}
+
+.info_table {
+    margin-bottom: 10px;
+    margin-top:    10px;
+    width:         100%;
+    border-width:  1px;
+    border-color:  black;
+    border-style:  solid;
 }
