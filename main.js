@@ -195,10 +195,10 @@ function readConfig(file) {
 
 // Entry point.
 function main() {
+    _config_ = readConfig(CONFIG_FILE);
+
     setupApplication();
     setupRoutes();
-
-    _config_ = readConfig(CONFIG_FILE);
 
     var server = app.listen(8080, function() {
         console.log("Listening on port %d", server.address().port);
